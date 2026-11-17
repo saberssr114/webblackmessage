@@ -1,5 +1,7 @@
 # BLACKMESSAGE
 
+IF YOU JAST TRY IN WEB SITE GO TO THIS LINK
+
 ![BLACKMESSAGE logo](logo.svg)
 
 **BLACKMESSAGE** is a dark, fast messenger for Android and Windows. Chat, share files and keep your conversations private.
