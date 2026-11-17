@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BLACKMESSAGE</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="apple-touch-icon" href="logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#030305;--ink:#e8faff;--mute:#7f93a3;--y:#ffffff;--c:#ff3b1f;--m:#c42200;--card:#0a0b10;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#030305}}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:500 1.15rem/1.55 Rajdhani,system-ui,sans-serif;overflow-x:hidden}
+canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+main,nav,footer{position:relative;z-index:1}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 5vw}
+nav b{font:900 1.2rem Orbitron,sans-serif;color:var(--y);text-shadow:0 0 12px var(--y)}
+nav a{color:var(--c);text-decoration:none;margin-left:24px;transition:text-shadow .2s}
+nav a:hover,nav a:focus-visible{text-shadow:0 0 12px var(--c);outline:none}
+.hero{min-height:84vh;display:flex;flex-direction:column;justify-content:center;padding:0 5vw;max-width:1100px}
+h1{font:900 clamp(2.3rem,8vw,6rem)/1.02 Orbitron,sans-serif;position:relative;text-shadow:0 0 30px #ff3b1f55}
+h1 span{display:inline-block;opacity:0;transform:translateZ(0) translateX(-40px) skewX(-20deg);animation:in .6s steps(6) forwards}
+@keyframes in{to{opacity:1;transform:none}}
+h1 em{font-style:normal;color:var(--y);text-shadow:0 0 24px var(--y)}
+.glitch{animation:gl 4s infinite 2s}
+@keyframes gl{0%,92%,100%{transform:none;text-shadow:0 0 30px #ff3b1f55}93%{transform:translate(-4px,1px);text-shadow:4px 0 var(--m),-4px 0 var(--c)}95%{transform:translate(4px,-2px);text-shadow:-4px 0 var(--m),4px 0 var(--c)}97%{transform:translate(-2px,0)}}
+.hero p{max-width:48ch;color:var(--mute);margin:26px 0 34px;opacity:0;animation:in .8s 1s forwards}
+.btn{display:inline-flex;align-items:center;gap:12px;font:900 .95rem Orbitron,sans-serif;letter-spacing:.06em;color:#030305;background:var(--y);border:0;padding:16px 30px;cursor:pointer;text-decoration:none;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));transition:transform .2s,filter .2s}
+.btn:hover,.btn:focus-visible{transform:translateY(-4px);filter:drop-shadow(0 0 14px var(--y));outline:none}
+.btn.c{background:var(--c)}.btn.m{background:var(--m);color:#fff}
+.btns{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:in .8s 1.2s forwards}
+.marquee{overflow:hidden;border-block:1px solid var(--c);padding:14px 0;margin:30px 0;background:#030305cc;box-shadow:0 0 24px #ff3b1f22}
+.track{display:flex;gap:56px;width:max-content;animation:sc 26s linear infinite;font:900 1.6rem Orbitron,sans-serif;color:transparent;-webkit-text-stroke:1px var(--m)}
+@keyframes sc{to{transform:translateX(-50%)}}
+section{padding:70px 5vw;max-width:1200px;margin:auto}
+h2{font:900 clamp(1.5rem,4vw,2.4rem) Orbitron,sans-serif;margin-bottom:34px;color:var(--c);text-shadow:0 0 16px #ff3b1f88}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;perspective:1000px}
+.card{background:var(--card);border:1px solid var(--c);padding:28px;min-height:250px;transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .2s;position:relative;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px));box-shadow:inset 0 0 40px #ff3b1f14}
+.card.y{border-color:var(--y)}.card.m{border-color:var(--m)}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,0%),#ff3b1f30,transparent 55%);pointer-events:none}
+.card h3{font:900 1.15rem Orbitron;margin:84px 0 8px;transform:translateZ(44px)}
+.card p{color:var(--mute);transform:translateZ(22px)}
+.cube{position:absolute;top:26px;left:26px;width:46px;height:46px;transform-style:preserve-3d;animation:cb 7s linear infinite;transform:translateZ(60px)}
+.cube i{position:absolute;inset:0;border:2px solid var(--c);background:#ff3b1f14}
+.cube i:nth-child(1){transform:translateZ(23px)}.cube i:nth-child(2){transform:rotateY(180deg) translateZ(23px)}
+.cube i:nth-child(3){transform:rotateY(90deg) translateZ(23px)}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(23px)}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(23px)}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(23px)}
+.y .cube i{border-color:var(--y);background:#ffffff14}.m .cube i{border-color:var(--m);background:#c4220014}
+@keyframes cb{to{transform:translateZ(60px) rotateX(360deg) rotateY(360deg)}}
+.dl{text-align:center}
+.dl .grid{max-width:820px;margin:auto}
+.dl .card{text-align:left}
+.dl .card h3{margin-top:84px}
+.dl .btn{margin-top:20px;transform:translateZ(50px)}
+#msg{min-height:1.6em;margin-top:26px;color:var(--y);text-align:center}
+footer{text-align:center;padding:40px 5vw 70px;color:var(--mute)}
+.pv{display:flex;flex-wrap:wrap;gap:50px;align-items:center;justify-content:center;perspective:1200px}
+.pvt{flex:1 1 280px;max-width:420px;color:var(--mute)}.pvt ul{margin:18px 0 0 20px;color:var(--ink)}.pvt li{margin:6px 0}
+.phone{width:240px;height:480px;border:2px solid var(--c);border-radius:36px;background:#06070a;padding:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 60px #ff3b1f40,inset 0 0 30px #ff3b1f18;transform:rotateY(-20deg) rotateX(6deg);transition:transform .15s ease-out;animation:fl 6s ease-in-out infinite alternate}
+@keyframes fl{to{transform:rotateY(14deg) rotateX(-4deg)}}
+.ph{font:900 .85rem Orbitron;padding:6px 4px 12px;border-bottom:1px solid #ffffff20;display:flex;align-items:center;gap:8px}.ph small{color:var(--mute);font:500 .8rem Rajdhani;margin-left:auto}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--m);box-shadow:0 0 10px var(--c)}
+.msgs{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding-top:10px}
+.b{max-width:82%;padding:9px 13px;border-radius:16px;font-size:.95rem;line-height:1.3;opacity:0;transform:translateY(14px);transition:.4s}
+.b.show{opacity:1;transform:none}.b.me{align-self:flex-end;background:var(--c);color:#030305;border-bottom-right-radius:4px}.b.you{align-self:flex-start;background:#1b1d26;border-bottom-left-radius:4px}
+.steps .n{position:absolute;top:22px;right:26px;font:900 2.4rem Orbitron;color:#ffffff18}.steps .card{min-height:200px}.steps h3{margin-top:30px}
+.faq{max-width:760px}details{border:1px solid #ffffff22;margin-bottom:12px;padding:16px 20px;background:var(--card)}
+summary{cursor:pointer;font:600 1.15rem Rajdhani;list-style:none;display:flex;justify-content:space-between}summary::after{content:"+";color:var(--c);font-size:1.4rem;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}details[open]{border-color:var(--c)}details p{color:var(--mute);margin-top:10px}
+.dl small{color:var(--mute)}.fl{display:flex;gap:26px;justify-content:center;margin-bottom:16px}.fl a{color:var(--c);text-decoration:none}
+.me{max-width:60ch;margin-bottom:34px;color:var(--mute)}.me p+p{margin-top:10px}.me b{color:var(--y)}
+a.card.soc{display:block;text-decoration:none;color:var(--ink);min-height:190px}.soc h3{margin-top:70px}
+#dmsg{min-height:1.6em;margin-top:22px;color:var(--y)}
+#about{position:relative;min-height:max(100vh,900px)}#about .card{background:#0a0b10a8}#about .me{background:#030305b0}.tet{position:absolute;inset:0;overflow:hidden;perspective:1000px;pointer-events:none;z-index:0;opacity:1}
+.tet canvas{width:100%;height:100%;display:block;transform:rotateX(10deg) scale(1.02);transform-origin:50% 100%}
+#about>:not(.tet){position:relative;z-index:1}.me{background:#030305d9;padding:16px 20px;border-left:4px solid var(--m)}
+body.wait h1 span,body.wait .hero p,body.wait .btns,body.wait .glitch{animation-play-state:paused}
+#enter{position:fixed;inset:0;z-index:100;background:#030305;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;transition:opacity .8s}
+#enter.out{opacity:0;pointer-events:none}#enter b{display:block;font:900 clamp(1.6rem,6vw,3rem) Orbitron,sans-serif;color:var(--y);text-shadow:0 0 20px var(--c)}
+#enter p{color:var(--mute);margin:16px 0 26px}#enter .btn{opacity:1;animation:none}
+.lnk{background:none;border:0;color:var(--mute);margin:18px auto 0;display:block;cursor:pointer;font:inherit;text-decoration:underline}
+#snd{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:50;background:#030305cc;color:var(--c);border:1px solid var(--c);padding:10px 14px;font:600 .9rem Rajdhani,sans-serif;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.b{opacity:1;transform:none}*{animation:none!important;transition:none!important}h1 span,.hero p,.btns{opacity:1;transform:none}}
+</style>
+</head>
+<body class="wait">
+<canvas id="bg" aria-hidden="true"></canvas>
+<nav><b>BLACKMESSAGE</b><div><a href="#features">Features</a><a href="#preview">Preview</a><a href="#faq">FAQ</a><a href="#about">About</a><a href="#download">Download</a></div></nav>
+<main>
+<div class="hero">
+<h1 class="glitch" aria-label="Meet the black bot."><span>Meet</span> <span style="animation-delay:.15s">the</span> <span style="animation-delay:.3s"><em>black</em></span> <span style="animation-delay:.45s">bot.</span></h1>
+<p>A dark, fast messenger for Android and Windows. Chat, share files and keep your conversations private. Move your mouse and the bot watches you.</p>
+<div class="btns"><a class="btn" href="BlackMessage.apk" data-dl="apk" download>Download APK</a><a class="btn c" href="BlackMessage-Setup.exe" data-dl="exe" download>Download EXE</a></div>
+<link rel="stylesheet" href="https://drive.google.com/file/d/1IGVnpl9_jWvpvRqmuKbfdLjjFk0bl58M/view?usp=drive_link">
+</div>
+<div class="marquee" aria-hidden="true"><div class="track"><span>CHAT</span><span>PRIVATE</span><span>FAST</span><span>GROUPS</span><span>FILES</span><span>CHAT</span><span>PRIVATE</span><span>FAST</span><span>GROUPS</span><span>FILES</span></div></div>
+<section id="features">
+<h2>Features</h2>
+<div class="grid">
+<div class="card "><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Private chats</h3><p>One-to-one conversations kept between you and the other person.</p></div>
+<div class="card y"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Fast messages</h3><p>Messages arrive quickly, even on a slow connection.</p></div>
+<div class="card m"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Groups and channels</h3><p>Talk with friends or teams, or broadcast to many people.</p></div>
+<div class="card "><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>File sharing</h3><p>Send photos, documents and videos right inside the chat.</p></div>
+<div class="card y"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Dark by design</h3><p>A black theme that is easy on the eyes at night.</p></div>
+<div class="card m"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Two platforms</h3><p>Use it on Android with the APK or on Windows with the EXE.</p></div>
+</div>
+</section>
+<section id="preview">
+<h2>See it in action</h2>
+<div class="pv">
+<div class="pvt"><p>Clean chats with big bubbles, clear names and nothing in the way. Hover the phone and watch a conversation play out.</p>
+<ul><li>Typing indicator and read marks</li><li>Reply, forward and delete</li><li>Dark theme everywhere</li></ul></div>
+<div class="phone" id="phone"><div class="ph"><span class="dot"></span>Bot <small>online</small></div><div class="msgs" id="msgs"></div></div>
+</div>
+</section>
+<section id="how">
+<h2>How it works</h2>
+<div class="grid steps">
+<div class="card"><span class="n">1</span><h3>Download</h3><p>Pick the APK for Android or the EXE for Windows.</p></div>
+<div class="card y"><span class="n">2</span><h3>Create your account</h3><p>Sign in with your name and a password, or scan a QR code.</p></div>
+<div class="card m"><span class="n">3</span><h3>Start chatting</h3><p>Add friends, make a group and send your first message.</p></div>
+</div>
+</section>
+<section id="faq">
+<h2>FAQ</h2>
+<div class="faq">
+<details><summary>Is BLACKMESSAGE free?</summary><p>Yes. Download it and use it at no cost.</p></details>
+<details><summary>Which devices are supported?</summary><p>Android 8 and newer, and Windows 10 and 11.</p></details>
+<details><summary>How do I install the APK?</summary><p>Open the downloaded file on your phone and allow installs from this source when Android asks.</p></details>
+<details><summary>Can I send files?</summary><p>Yes. You can send photos, documents and videos in any chat.</p></details>
+<details><summary>Who can read my messages?</summary><p>Only you and the people in the chat.</p></details>
+</div>
+</section>
+<section id="about">
+<div class="tet" aria-hidden="true"><canvas id="tetc"></canvas></div>
+<h2>About me</h2>
+<div class="me"><p>Hi, I am <b>SKIRO-7</b>. I make websites, apps and tools, and I built BLACKMESSAGE. I like dark themes, 3D motion and anything that feels like a game.</p><p>Find me on any of these links.</p></div>
+<div class="me" style="margin-top:16px;border-left-color:var(--c)"><p><b>BLACKMESSAGE app</b> — a dark, fast messenger for Android and Windows. Chat, share files and keep conversations private. Available as an Android APK and a Windows EXE installer, plus this website.</p></div>
+<div class="grid">
+<a class="card soc " href="https://github.com/saberssr114" target="_blank" rel="noopener"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>GitHub</h3><p>saberssr114</p></a>
+<a class="card soc y" href="https://x.com/sshroud883" target="_blank" rel="noopener"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>X</h3><p>@sshroud883</p></a>
+<a class="card soc m" href="https://www.youtube.com/@SKIRO-7" target="_blank" rel="noopener"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>YouTube</h3><p>@SKIRO-7</p></a>
+<a class="card soc " href="https://www.instagram.com/skiro7x/" target="_blank" rel="noopener"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Instagram</h3><p>@skiro7x</p></a>
+<a class="card soc y" href="https://www.facebook.com/profile.php?id=61573616255708" target="_blank" rel="noopener"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Facebook</h3><p>My profile</p></a>
+<a class="card soc m" id="discord" href="#about"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Discord</h3><p>Join my Discord</p></a>
+</div>
+<div id="dmsg" role="status"></div>
+</section>
+<section id="download" class="dl">
+<h2>Download</h2>
+<div class="grid">
+<div class="card y"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Android</h3><p>APK for Android 8 and newer.<br><small>Version 1.0 &middot; about 25 MB</small></p><a class="btn" href="BlackMessage.apk" data-dl="apk" download>Download APK</a></div>
+<div class="card"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div><h3>Windows</h3><p>EXE installer for Windows 10 and 11.<br><small>Version 1.0 &middot; about 60 MB</small></p><a class="btn c" href="BlackMessage-Setup.exe" data-dl="exe" download>Download EXE</a></div>
+</div>
+<div id="msg" role="status"></div>
+</section>
+</main>
+<footer><div class="fl"><a href="#features">Features</a><a href="#preview">Preview</a><a href="#faq">FAQ</a><a href="#about">About</a><a href="#download">Download</a></div>BLACKMESSAGE &copy; 2026</footer>
+
+<div id="enter" role="dialog" aria-label="Start"><div><b>BLACKMESSAGE</b><p>Best with sound on. Relaxing music and game sounds.</p><button class="btn" id="enterMusic">Enter with music</button><button class="lnk" id="enterSilent">Enter without sound</button></div></div>
+<button id="snd" hidden aria-label="Turn sound on or off">Sound off</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+// Put your real file links here (for example "https://example.com/app.apk")
+var LINKS={apk:"BlackMessage.apk",exe:"BlackMessage-Setup.exe"};
+var DISCORD="";// paste your Discord invite link here
+(function(){var d=document.getElementById('discord');if(DISCORD){d.href=DISCORD;d.target="_blank";d.rel="noopener"}else d.addEventListener('click',function(e){e.preventDefault();document.getElementById('dmsg').textContent='Discord link coming soon.'})})();
+
+document.querySelectorAll('[data-dl]').forEach(function(a){a.addEventListener('click',function(e){
+var u=LINKS[a.dataset.dl],m=document.getElementById('msg');
+if(u){e.preventDefault();location.href=u}else{m.textContent='The '+a.dataset.dl.toUpperCase()+' file is not uploaded yet.'}})});
+
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var cv=document.getElementById('bg');
+try{
+var R=new THREE.WebGLRenderer({canvas:cv,antialias:true,preserveDrawingBuffer:true});R.autoClear=false;R.setClearColor(0x030305,1);R.clear();
+var FS=new THREE.Scene(),FC=new THREE.OrthographicCamera(-1,1,1,-1,0,1);FS.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.MeshBasicMaterial({color:0x030305,transparent:true,opacity:.2,depthTest:false,depthWrite:false})));
+R.setPixelRatio(Math.min(devicePixelRatio,2));
+var S=new THREE.Scene();S.fog=new THREE.Fog(0x030305,8,38);
+var C=new THREE.PerspectiveCamera(65,1,.1,100);C.position.set(0,1.6,8);
+function wire(geo,col,op){return new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:op}))}
+var grid=new THREE.GridHelper(80,60,0xc42200,0xc42200);grid.position.y=-2;grid.material.transparent=true;grid.material.opacity=.45;S.add(grid);
+var roof=new THREE.GridHelper(80,40,0xff3b1f,0xff3b1f);roof.position.y=14;roof.material.transparent=true;roof.material.opacity=.15;S.add(roof);
+// streets: lane lines, dashes, cross streets, cars
+var LM=function(c,o){return new THREE.LineBasicMaterial({color:c,transparent:true,opacity:o})};
+[-14,-10,-6,-3,3,6,10,14].forEach(function(x,i){S.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x,-1.97,-70),new THREE.Vector3(x,-1.97,12)]),LM(i%2?0xff3b1f:0xc42200,.95)))});
+var dashes=[],cross=[],cars=[];
+[-8,-1.5,1.5,8].forEach(function(x){for(var k=0;k<20;k++){var m=new THREE.Mesh(new THREE.PlaneGeometry(.2,1.6),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.8}));m.rotation.x=-Math.PI/2;m.position.set(x,-1.96,0);S.add(m);dashes.push({m:m,b:k*4})}});
+for(var q=0;q<14;q++){var l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-14,-1.97,0),new THREE.Vector3(14,-1.97,0)]),LM(0xff3b1f,.45));S.add(l);cross.push({m:l,b:q*6})}
+[-12,-4.5,4.5,12].forEach(function(x,i){for(var k=0;k<4;k++){var c=new THREE.Mesh(new THREE.BoxGeometry(.55,.28,2.2),new THREE.MeshBasicMaterial({color:(k+i)%2?0xffffff:0xff3b1f}));c.position.set(x,-1.8,0);S.add(c);cars.push({m:c,b:Math.random()*80,v:(x>0?1:-1)*(18+Math.random()*26)})}});
+// smoke at the end of the street
+var sc=document.createElement('canvas');sc.width=sc.height=128;var sx=sc.getContext('2d'),sg=sx.createRadialGradient(64,64,0,64,64,64);
+sg.addColorStop(0,'rgba(255,255,255,.9)');sg.addColorStop(.4,'rgba(255,255,255,.35)');sg.addColorStop(1,'rgba(255,255,255,0)');sx.fillStyle=sg;sx.fillRect(0,0,128,128);
+var stex=new THREE.CanvasTexture(sc),puffs=[];
+for(var u=0;u<46;u++){var red=u%3===0,sp=new THREE.Sprite(new THREE.SpriteMaterial({map:stex,color:red?0xc42200:0x4a2a26,transparent:true,opacity:.2,depthWrite:false,fog:false,blending:red?THREE.AdditiveBlending:THREE.NormalBlending}));
+var sz=9+Math.random()*10;sp.scale.set(sz,sz,1);var px=(Math.random()-.5)*26,py=-1.5+Math.random()*5,pz=-48-Math.random()*14;sp.position.set(px,py,pz);S.add(sp);
+puffs.push({s:sp,x:px,y:py,z:pz,r:Math.random()*6.28,sp:.4+Math.random()*.6,o:red?.22:.28})}
+function wrap(v){return ((v%80)+80)%80-68}
+var hero=new THREE.Group();S.add(hero);
+var disc=new THREE.Mesh(new THREE.CircleGeometry(3.7,64),new THREE.MeshBasicMaterial({color:0xc42200}));disc.position.set(-.5,-.3,-2.4);hero.add(disc);
+var bot=new THREE.Group();hero.add(bot);
+bot.add(new THREE.Mesh(new THREE.SphereGeometry(2.5,48,32),new THREE.MeshBasicMaterial({color:0x050505})));
+bot.add(wire(new THREE.IcosahedronGeometry(2.58,2),0xff3b1f,.3));
+function pill(w,h,r,d){var x=-w/2,y=-h/2,sh=new THREE.Shape();
+sh.moveTo(x+r,y);sh.lineTo(x+w-r,y);sh.quadraticCurveTo(x+w,y,x+w,y+r);sh.lineTo(x+w,y+h-r);sh.quadraticCurveTo(x+w,y+h,x+w-r,y+h);sh.lineTo(x+r,y+h);sh.quadraticCurveTo(x,y+h,x,y+h-r);sh.lineTo(x,y+r);sh.quadraticCurveTo(x,y,x+r,y);
+return new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:d,bevelEnabled:false}),new THREE.MeshBasicMaterial({color:0xffffff}))}
+var eyeL=pill(.95,1.7,.4,.25),eyeR=pill(.95,1.7,.4,.25);
+eyeL.position.set(-.85,-.5,2.3);eyeR.position.set(.85,-.5,2.3);bot.add(eyeL);bot.add(eyeR);
+var sparks=[[-1.75,1.2,-.8,.65],[-1.1,1.6,.35,.42],[-2.2,.35,1.3,.42]].map(function(d){
+var m=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,d[3],12),new THREE.MeshBasicMaterial({color:0xffffff}));
+m.position.set(d[0],d[1],1.9);m.rotation.z=d[2];bot.add(m);return m});
+// neon towers
+var tw=[],cols=[0xff3b1f,0xc42200,0xffffff];
+for(var i=0;i<46;i++){var h=2+Math.random()*10,w=.6+Math.random()*1.2;
+var b=new THREE.Mesh(new THREE.BoxGeometry(w,h,w),new THREE.MeshBasicMaterial({color:0x05060a}));
+var e=new THREE.LineSegments(new THREE.EdgesGeometry(b.geometry),new THREE.LineBasicMaterial({color:cols[i%3]}));
+var x=(Math.random()<.5?-1:1)*(17+Math.random()*12),z=-Math.random()*50+6;
+b.position.set(x,h/2-2,z);e.position.copy(b.position);S.add(b);S.add(e);tw.push(b)}
+var n=900,p=new Float32Array(n*3);for(var j=0;j<n*3;j+=3){p[j]=(Math.random()-.5)*50;p[j+1]=Math.random()*16-2;p[j+2]=-Math.random()*50+8}
+var g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));
+var rain=new THREE.Points(g,new THREE.PointsMaterial({color:0xff3b1f,size:.06,transparent:true,opacity:.8}));S.add(rain);
+function size(){var w=innerWidth,h=innerHeight;R.setSize(w,h,false);C.aspect=w/h;C.updateProjectionMatrix();hero.position.set(w<700?0:3.2,w<700?2.2:1.4,0);hero.scale.setScalar(w<700?.6:1)}
+size();addEventListener('resize',size);
+var mx=0,my=0,tx=0,ty=0,sy=0,t=0;
+addEventListener('pointermove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+addEventListener('scroll',function(){sy=scrollY/innerHeight});
+function tick(){
+t+=reduce?0:.012;tx+=(mx-tx)*.05;ty+=(my-ty)*.05;
+bot.rotation.y=tx*1.1+Math.sin(t)*.12;bot.rotation.x=ty*.7;bot.position.y=Math.sin(t*1.6)*.2;
+eyeL.position.x=-.85+tx*.3;eyeR.position.x=.85+tx*.3;
+var bs=(t%4)<.1?.1:1;eyeL.scale.y=eyeR.scale.y=bs;
+sparks.forEach(function(m,i){m.scale.setScalar(1+Math.sin(t*6+i*2)*.22)});
+grid.position.z=(t*8)%(80/60);
+C.position.z=8-sy*14;C.position.x=tx*3;C.position.y=1.6-ty*1.5+sy*.6;
+C.lookAt(tx*2,1.2,C.position.z-10);
+var a=rain.geometry.attributes.position.array;
+if(!reduce)for(var k=1;k<a.length;k+=3){a[k]-=.08;if(a[k]<-2)a[k]=14}
+rain.geometry.attributes.position.needsUpdate=true;
+dashes.forEach(function(d){d.m.position.z=wrap(d.b+t*30)});
+cross.forEach(function(d){d.m.position.z=wrap(d.b+t*30)});
+cars.forEach(function(d){d.m.position.z=wrap(d.b+t*d.v)});
+puffs.forEach(function(p){var k=t*p.sp+p.r,rise=(k*.6)%5;p.s.position.set(p.x+Math.sin(k)*2.5,p.y+rise,p.z+Math.cos(k*.7)*2);p.s.material.rotation=k*.3;p.s.material.opacity=p.o*Math.sin(Math.PI*rise/5)+.04});
+R.render(FS,FC);R.clearDepth();R.render(S,C);requestAnimationFrame(tick)}
+tick();
+}catch(e){cv.style.display='none'}
+
+
+// chat demo
+(function(){var seq=[['you','Hey, did you get the new build?'],['me','Yes! The dark theme looks amazing'],['you','Send me the APK'],['me','Sent. Check your files'],['you','Perfect, thanks']];
+var box=document.getElementById('msgs'),els=seq.map(function(m){var d=document.createElement('div');d.className='b '+m[0];d.textContent=m[1];box.appendChild(d);return d});
+var i=0;if(matchMedia('(prefers-reduced-motion: reduce)').matches){els.forEach(function(e){e.classList.add('show')});return}
+setInterval(function(){if(i<els.length){els[i++].classList.add('show')}else{els.forEach(function(e){e.classList.remove('show')});i=0}},1300)})();
+// relaxing music + game sounds (made with Web Audio, no files)
+(function(){
+var AC=window.AudioContext||window.webkitAudioContext,ctx,mst,wet,tm,nt=0,bar=0,sOn=false;
+var CH=[[57,60,64,67],[53,57,60,64],[48,52,55,59],[55,59,62,64]],PAT=[0,1,2,3,2,1,2,3],MEL=[81,84,86,88,91];
+function f(m){return 440*Math.pow(2,(m-69)/12)}
+function init(){ctx=new AC();mst=ctx.createGain();mst.gain.value=0;mst.connect(ctx.destination);
+var cv=ctx.createConvolver(),len=ctx.sampleRate*3,b=ctx.createBuffer(2,len,ctx.sampleRate);
+for(var c=0;c<2;c++){var d=b.getChannelData(c);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5)}
+cv.buffer=b;wet=ctx.createGain();wet.gain.value=.5;wet.connect(cv);cv.connect(mst)}
+function tone(fr,t,type,a,d,v,lp){var o=ctx.createOscillator(),g=ctx.createGain(),n=o;o.type=type;o.frequency.value=fr;
+g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);
+if(lp){var q=ctx.createBiquadFilter();q.type='lowpass';q.frequency.value=lp;o.connect(q);q.connect(g)}else o.connect(g);
+g.connect(mst);g.connect(wet);o.start(t);o.stop(t+a+d+.1)}
+function pluck(m,t,v){tone(f(m),t,'sine',.01,1.8,v);tone(f(m)*2,t,'triangle',.01,.6,v*.18)}
+function sched(){while(nt<ctx.currentTime+1.5){var c=CH[bar%4];
+c.forEach(function(m){tone(f(m),nt,'triangle',1.5,3,.03,800);tone(f(m)*1.004,nt,'triangle',1.5,3,.02,800)});
+tone(f(c[0]-12),nt,'sine',.05,3.5,.12);
+for(var k=0;k<8;k++)if(Math.random()<.88)pluck(c[PAT[k]]+12,nt+k*.5,.05+Math.random()*.03);
+if(Math.random()<.5)pluck(MEL[Math.floor(Math.random()*5)],nt+2,.04);
+bar++;nt+=4}}
+function setBtn(){var b=document.getElementById('snd');b.hidden=false;b.textContent=sOn?'Sound on':'Sound off'}
+function on(){if(!AC)return;if(!ctx)init();ctx.resume();if(!sOn){sOn=true;nt=ctx.currentTime+.1;bar=0;tm=setInterval(sched,300);sched()}
+mst.gain.cancelScheduledValues(ctx.currentTime);mst.gain.setValueAtTime(mst.gain.value,ctx.currentTime);mst.gain.linearRampToValueAtTime(.55,ctx.currentTime+3);setBtn()}
+function off(){if(sOn){sOn=false;clearInterval(tm);mst.gain.cancelScheduledValues(ctx.currentTime);mst.gain.setValueAtTime(mst.gain.value,ctx.currentTime);mst.gain.linearRampToValueAtTime(0,ctx.currentTime+.6)}setBtn()}
+function enter(m){document.body.classList.remove('wait');var e=document.getElementById('enter');e.classList.add('out');setTimeout(function(){e.remove()},900);if(m)on();else setBtn()}
+document.getElementById('enterMusic').addEventListener('click',function(){enter(true)});
+document.getElementById('enterSilent').addEventListener('click',function(){enter(false)});
+document.getElementById('snd').addEventListener('click',function(){sOn?off():on()});
+document.addEventListener('visibilitychange',function(){if(!ctx||!sOn)return;document.hidden?ctx.suspend():ctx.resume()});
+window.BMsfx=function(k){if(!ctx||!sOn||!window.BMvis)return;var t=ctx.currentTime+.01;
+if(k==='line')[81,84,88,93].forEach(function(m,i){pluck(m,t+i*.09,.07)});else tone(196,t,'sine',.005,.3,.12)}})();
+// Tetris playing itself behind the About section
+(function(){
+var host=document.querySelector('.tet'),cv=document.getElementById('tetc'),cx=cv.getContext('2d'),W=10,H=20;
+var SH=[[[0,0],[1,0],[2,0],[3,0]],[[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[2,0],[1,1]],[[0,0],[1,0],[2,0],[2,1]],[[0,0],[1,0],[2,0],[0,1]],[[1,0],[2,0],[0,1],[1,1]],[[0,0],[1,0],[1,1],[2,1]]];
+var COL=['#ff7a00','#ffb000','#ff4b1f','#c24a00','#ff9d2e','#e85d04','#ffd199'];
+function rot(c){var r=c.map(function(p){return[p[1],-p[0]]}),a=Math.min.apply(0,r.map(function(p){return p[0]})),b=Math.min.apply(0,r.map(function(p){return p[1]}));return r.map(function(p){return[p[0]-a,p[1]-b]})}
+function Game(){this.reset()}
+Game.prototype.reset=function(){this.g=[];for(var i=0;i<H;i++)this.g.push(new Array(W).fill(0));this.spawn()};
+Game.prototype.fits=function(c,x,y){for(var i=0;i<c.length;i++){var X=x+c[i][0],Y=y+c[i][1];if(X<0||X>=W||Y>=H||(Y>=0&&this.g[Y][X]))return false}return true};
+Game.prototype.spawn=function(){
+var k=Math.floor(Math.random()*7),best=-1e9,c=SH[k],rs=[];
+for(var r=0;r<4;r++){rs.push(c);c=rot(c)}
+for(r=0;r<4;r++){var cells=rs[r];for(var x=-1;x<W;x++){if(!this.fits(cells,x,0))continue;var y=0;while(this.fits(cells,x,y+1))y++;
+var sc=this.score(cells,x,y);if(sc>best){best=sc;this.tr=r;this.tx=x}}}
+this.k=k;this.rs=rs;this.r=0;this.cells=rs[0];this.x=3;this.y=0;this.col=k;
+if(!this.fits(this.cells,this.x,0)){this.reset()}};
+Game.prototype.score=function(cells,x,y){
+var g=this.g.map(function(r){return r.slice()});cells.forEach(function(p){if(y+p[1]>=0)g[y+p[1]][x+p[0]]=1});
+var lines=0,i,j;for(i=0;i<H;i++)if(g[i].every(Boolean))lines++;
+var hs=[],holes=0;for(j=0;j<W;j++){var h=0,seen=false;for(i=0;i<H;i++){if(g[i][j]){if(!seen){h=H-i;seen=true}}else if(seen)holes++}hs.push(h)}
+var agg=hs.reduce(function(a,b){return a+b},0),bump=0;for(j=0;j<W-1;j++)bump+=Math.abs(hs[j]-hs[j+1]);
+return -.51*agg+.76*lines*3-.36*holes*2-.18*bump};
+Game.prototype.step=function(){
+if(this.r!==this.tr){var n=(this.r+1)%4;if(this.fits(this.rs[n],this.x,this.y)){this.r=n;this.cells=this.rs[n]}else this.r=this.tr}
+else if(this.x!==this.tx){var d=this.tx>this.x?1:-1;if(this.fits(this.cells,this.x+d,this.y))this.x+=d;else this.tx=this.x}
+if(this.fits(this.cells,this.x,this.y+1))this.y++;
+else{var s=this;this.cells.forEach(function(p){if(s.y+p[1]>=0)s.g[s.y+p[1]][s.x+p[0]]=s.col+1});
+var fl=this.g.filter(function(r){return!r.every(Boolean)}),cl=H-fl.length;this.g=fl;while(this.g.length<H)this.g.unshift(new Array(W).fill(0));if(this.snd&&window.BMsfx)window.BMsfx(cl?'line':'drop');this.spawn()}};
+function block(X,Y,s,col){cx.fillStyle=col;cx.fillRect(X,Y,s,s);cx.fillStyle='rgba(255,255,255,.4)';cx.fillRect(X,Y,s,s*.14);cx.fillRect(X,Y,s*.14,s);cx.fillStyle='rgba(0,0,0,.4)';cx.fillRect(X,Y+s*.86,s,s*.14);cx.fillRect(X+s*.86,Y,s*.14,s)}
+var games=[new Game(),new Game(),new Game()];games[0].snd=true;var cs=20,n=1,w=0,h=0;
+function size(){var d=Math.min(devicePixelRatio||1,2);w=host.clientWidth;h=host.clientHeight;cv.width=w*d;cv.height=h*d;cx.setTransform(d,0,0,d,0,0);cs=Math.max(14,Math.floor(h*.97/H));n=Math.max(1,Math.min(2,Math.floor(w/(W*cs+30))));draw()}
+function draw(){cx.clearRect(0,0,w,h);for(var i=0;i<n;i++){var G=games[i],ox=Math.round(w/n*(i+.5)-W*cs/2),oy=h-H*cs-4;
+cx.fillStyle='rgba(0,0,0,.55)';cx.fillRect(ox,oy,W*cs,H*cs);cx.strokeStyle='#ff7a00';cx.lineWidth=2;cx.strokeRect(ox,oy,W*cs,H*cs);
+for(var y=0;y<H;y++)for(var x=0;x<W;x++){var v=G.g[y][x];if(v)block(ox+x*cs,oy+y*cs,cs-1,COL[v-1])}
+G.cells.forEach(function(p){var yy=G.y+p[1];if(yy>=0)block(ox+(G.x+p[0])*cs,oy+yy*cs,cs-1,COL[G.col])})}}
+for(var t=0;t<260;t++)games.forEach(function(g){g.step()});
+size();addEventListener('resize',size);
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var on=true;
+if('IntersectionObserver' in window)new IntersectionObserver(function(e){on=window.BMvis=e[0].isIntersecting}).observe(host);
+setInterval(function(){if(!on)return;for(var i=0;i<n;i++)games[i].step();draw()},120)}
+})();
+document.querySelectorAll('.card').forEach(function(c){
+c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+c.style.transform='rotateY('+((x-.5)*20)+'deg) rotateX('+((.5-y)*20)+'deg) translateZ(12px)';
+c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%')});
+c.addEventListener('pointerleave',function(){c.style.transform=''})});
+})();
+</script>
+</body>
+</html>
